@@ -11,11 +11,17 @@
 
 int main() {
     flint::fmpzxx base("2017");
+    unsigned int n = 2017;
+
     flint::fmpzxx power("1"), module;
 
     // module = module_base ^ module_exp
     flint::fmpzxx module_base("10");
-    unsigned int module_exp = 100;
+    unsigned int module_exp = 50;
+
+    if (n > module_exp) {
+        n = module_exp;
+    }
 
     if (module_base == 10) {
         fmpz_pow_ui(module._fmpz(), module_base._fmpz(), module_exp);
@@ -27,7 +33,7 @@ int main() {
             return -1;
         }
 
-        for (int i = 0; i < module_exp; i++) {
+        for (int i = 0; i < n; i++) {
             fmpz_powm(power._fmpz(), base._fmpz(), power._fmpz(), module._fmpz());
         }
 
@@ -43,7 +49,7 @@ int main() {
         }
 
         phi_list.push_back(phi);
-        for (int i = 0; i < module_exp; i++) {
+        for (int i = 0; i < n; i++) {
             fmpz_euler_phi(phi._fmpz(), phi._fmpz());
             fmpz_gcd(d._fmpz(), phi._fmpz(), base._fmpz());
             if (d != 1) {
@@ -53,8 +59,8 @@ int main() {
             phi_list.push_back(phi);
         }
 
-        for (int i = 0; i < module_exp + 1; i++) {
-            fmpz_powm(power._fmpz(), base._fmpz(), power._fmpz(), phi_list[module_exp - i]._fmpz());
+        for (int i = 0; i < n + 1; i++) {
+            fmpz_powm(power._fmpz(), base._fmpz(), power._fmpz(), phi_list[n - i]._fmpz());
         }
     }
 
